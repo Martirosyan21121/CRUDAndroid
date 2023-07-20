@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CRUDApplication</string>
+    <string name="go_back">Go back</string>
+</resources>
