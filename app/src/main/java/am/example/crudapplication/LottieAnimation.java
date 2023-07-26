@@ -1,11 +1,10 @@
 package am.example.crudapplication;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
 public class LottieAnimation extends AppCompatActivity {
@@ -19,12 +18,9 @@ public class LottieAnimation extends AppCompatActivity {
         setContentView(R.layout.activity_lottie_animation);
 
         lottie = findViewById(R.id.lottie);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(i);
-            }
+        new Handler().postDelayed(() -> {
+            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(i);
         }, 3000);
     }
 }

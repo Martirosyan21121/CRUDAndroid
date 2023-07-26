@@ -1,7 +1,6 @@
 package am.example.crudapplication;
 
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
@@ -15,17 +14,20 @@ public interface UserDAO {
     @Insert
     void saveUser(User user);
 
+//    @Query(value = "UPDATE user SET name = :updateName, surname = :updateSurname, email = :updateEmail, phoneNumber= :updatePhoneNumber")
     @Update
     void updateUser(User user);
 
-    @Delete
-    void deleteUser(User user);
+    @Query(value = "DELETE from USER WHERE id=:id")
+    void deleteUser(int id);
 
-    @Query("SELECT * FROM user")
+    @Query(value = "SELECT * FROM user")
     List<User> findAll();
 
-    @Query("SELECT * FROM user WHERE id IN (:userId)")
+    @Query(value = "SELECT * FROM user WHERE id IN (:userId)")
     Optional<User> findUserById(long userId);
+    @Query(value = "SELECT * FROM user WHERE name=:name")
+    List<User> findAllByName(String name);
 
 
 }

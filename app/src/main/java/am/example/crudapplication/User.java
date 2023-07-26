@@ -1,11 +1,10 @@
 package am.example.crudapplication;
 
-import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import org.jetbrains.annotations.NotNull;
+import java.io.Serializable;
 
 @Entity(tableName = "user")
 public class User {
@@ -13,14 +12,12 @@ public class User {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    @ColumnInfo(name = "name")
     private String name;
-    @ColumnInfo(name = "surname")
     private String surname;
-    @ColumnInfo(name = "email")
     private String email;
-    @ColumnInfo(name = "phone_number")
     private String phoneNumber;
+
+
 
     public User(int id, String name, String surname, String email, String phoneNumber) {
         this.id = id;
@@ -69,4 +66,5 @@ public class User {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
 }
