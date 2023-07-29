@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -62,5 +63,17 @@
         android:backgroundTint="@color/myColor"
         android:text="@string/add"
         android:textSize="30sp" />
+
+    <ImageButton
+        android:id="@+id/homeButton"
+        android:layout_marginStart="20sp"
+        android:layout_width="50sp"
+        android:layout_height="50sp"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/baseline_home_24"
+        android:layout_marginTop="5sp"
+        android:textColor="@color/myColor"
+        android:contentDescription="@string/todo" />
+
 
 </FrameLayout>

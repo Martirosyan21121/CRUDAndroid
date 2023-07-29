@@ -14,7 +14,6 @@ public interface UserDAO {
     @Insert
     void saveUser(User user);
 
-//    @Query(value = "UPDATE user SET name = :updateName, surname = :updateSurname, email = :updateEmail, phoneNumber= :updatePhoneNumber")
     @Update
     void updateUser(User user);
 
@@ -28,6 +27,5 @@ public interface UserDAO {
     Optional<User> findUserById(long userId);
     @Query(value = "SELECT * FROM user WHERE name=:name")
     List<User> findAllByName(String name);
-
 
 }

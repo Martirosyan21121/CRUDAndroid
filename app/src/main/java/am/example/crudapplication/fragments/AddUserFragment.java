@@ -28,12 +28,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.Objects;
 
+import am.example.crudapplication.MainActivity;
 import am.example.crudapplication.R;
 import am.example.crudapplication.User;
 import am.example.crudapplication.UserDAO;
@@ -46,6 +48,7 @@ public class AddUserFragment extends Fragment {
     private EditText surname;
     private EditText email;
     private EditText phoneNumber;
+
 
     private ImageView imageView;
     Button selectImage;
@@ -73,9 +76,15 @@ public class AddUserFragment extends Fragment {
 
         userDatabase = UserDatabase.getInstance(getContext());
         userDAO = userDatabase.userDAO();
+
+        imageView = view.findViewById(R.id.imageView);
+        selectImage.setOnClickListener(view1 -> {
+
+        });
+
         saveUser = view.findViewById(R.id.saveUser);
         saveUser.setOnClickListener(view1 -> {
-            String userName = name.getText().toString();
+            String userName = name.getText().toString().replace(" ", "");
             String userSurname = surname.getText().toString();
             String userEmail = email.getText().toString();
             String userPhoneNumber = phoneNumber.getText().toString();
@@ -91,6 +100,11 @@ public class AddUserFragment extends Fragment {
                 Toast.makeText(getContext(), "User saved", Toast.LENGTH_SHORT).show();
                 Navigation.findNavController(view).navigate(R.id.action_addUserFragment2_to_firstPageFragment2);
             }
+        });
+
+        ImageButton backButton = view.findViewById(R.id.backBtn);
+        backButton.setOnClickListener(view1 -> {
+            Navigation.findNavController(view).navigate(R.id.action_addUserFragment2_to_firstPageFragment2);
         });
         return view;
     }

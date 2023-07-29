@@ -1,18 +1,34 @@
 package am.example.crudapplication.fragments;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.provider.MediaStore;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import am.example.crudapplication.R;
@@ -29,6 +45,12 @@ public class UpdateUserFragment extends Fragment {
     private UserDAO userDAO;
     private UserDatabase userDatabase;
 
+    private Bitmap bitmap;
+
+    private Uri imageUri;
+
+    private ImageView imageView;
+    Button selectImage;
     Button updateButton;
 
     public UpdateUserFragment() {
@@ -45,6 +67,8 @@ public class UpdateUserFragment extends Fragment {
         emailUpdate = view.findViewById(R.id.updateUserEmail);
         surnameUpdate = view.findViewById(R.id.updateUserSurname);
         phoneNumberUpdate = view.findViewById(R.id.updateUserPhoneNumber);
+        imageView = view.findViewById(R.id.imageViewUpdate);
+        selectImage = view.findViewById(R.id.btnSelectImageUpdate);
 
         AtomicInteger userId = new AtomicInteger();
         getParentFragmentManager().setFragmentResultListener("userData", this, (requestKey, result) -> {
@@ -64,9 +88,10 @@ public class UpdateUserFragment extends Fragment {
         userDatabase = UserDatabase.getInstance(getContext());
         userDAO = userDatabase.userDAO();
 
+
         updateButton = view.findViewById(R.id.updateUser);
         updateButton.setOnClickListener(view1 -> {
-            String userName = nameUpdate.getText().toString();
+            String userName = nameUpdate.getText().toString().replace(" ", "");
             String userSurname = surnameUpdate.getText().toString();
             String userEmail = emailUpdate.getText().toString();
             String userPhoneNumber = phoneNumberUpdate.getText().toString();
@@ -82,6 +107,11 @@ public class UpdateUserFragment extends Fragment {
                 Navigation.findNavController(view).navigate(R.id.firstPageFragment2);
                 Toast.makeText(getContext(), "User updated", Toast.LENGTH_LONG).show();
             }
+        });
+
+        ImageButton backToAddPage = view.findViewById(R.id.updateBtn);
+        backToAddPage.setOnClickListener(view1 -> {
+            Navigation.findNavController(view).navigate(R.id.action_updateUserFragment2_to_addUserFragment2);
         });
 
         return view;

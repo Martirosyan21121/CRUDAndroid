@@ -1,20 +1,18 @@
 package am.example.crudapplication.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.FragmentNavigator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 import java.util.Optional;
@@ -61,29 +59,35 @@ public class FirstPageFragment extends Fragment implements UserAdapterListener {
         recyclerView.setAdapter(userAdapter);
 
 
-
         searchButton = view.findViewById(R.id.searchButton);
         searchButton.setOnClickListener(view12 -> {
             EditText search = view.findViewById(R.id.search);
             String searchName = search.getText().toString();
-            if (searchName.isEmpty()){
+            if (searchName.isEmpty()) {
                 Toast.makeText(getContext(), "Please input name", Toast.LENGTH_LONG).show();
-            }else if (userDAO.findAllByName(searchName).isEmpty()){
+            } else if (userDAO.findAllByName(searchName).isEmpty()) {
                 Toast.makeText(getContext(), "Name dose not exist", Toast.LENGTH_LONG).show();
-            }else {
+            } else {
                 userList = userDAO.findAllByName(searchName);
                 userAdapter = new UserAdapter(userList, this);
                 recyclerView.setAdapter(userAdapter);
                 Toast.makeText(getContext(), "Search successfully done", Toast.LENGTH_LONG).show();
             }
         });
+
+        ImageButton homeButton = view.findViewById(R.id.homeButton);
+        homeButton.setOnClickListener(view1 -> {
+            Navigation.findNavController(view).navigate(R.id.firstPageFragment2);
+        });
         return view;
     }
+
     @Override
     public void deleteUser(int id, int position) {
         userDAO.deleteUser(id);
         userAdapter.deleteUserPosition(position);
     }
+
     @Override
     public void updateUser(User user) {
         Optional<User> optionalUser = userDAO.findUserById(user.getId());

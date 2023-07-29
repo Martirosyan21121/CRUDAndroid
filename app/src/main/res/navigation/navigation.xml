@@ -29,5 +29,9 @@
         android:id="@+id/updateUserFragment2"
         android:name="am.example.crudapplication.fragments.UpdateUserFragment"
         android:label="user_update_fragment"
-        tools:layout="@layout/user_update_fragment" />
+        tools:layout="@layout/user_update_fragment" >
+        <action
+            android:id="@+id/action_updateUserFragment2_to_addUserFragment2"
+            app:destination="@id/addUserFragment2" />
+    </fragment>
 </navigation>

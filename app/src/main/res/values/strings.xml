@@ -17,4 +17,7 @@
     <string name="add_user">Add User</string>
     <string name="phone_Number">" phone number"</string>
     <string name="add">+</string>
+    <string name="b"><![CDATA[<-]]></string>
+    <string name="back"><![CDATA[<]]></string>
+    <string name="todo">TODO</string>
 </resources>
