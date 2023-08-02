@@ -1,10 +1,9 @@
 package am.example.crudapplication;
 
-import androidx.room.ColumnInfo;
+import android.net.Uri;
+
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
-import java.io.Serializable;
 
 @Entity(tableName = "user")
 public class User {
@@ -17,16 +16,17 @@ public class User {
     private String email;
     private String phoneNumber;
 
-//    private String picUrl;
 
-//, String picUrl
-    public User(int id, String name, String surname, String email, String phoneNumber) {
+
+    private String image;
+
+    public User(int id, String name, String surname, String email, String phoneNumber, String image) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.phoneNumber = phoneNumber;
-//        this.picUrl = picUrl;
+        this.image = image;
     }
 
     public int getId() {
@@ -69,11 +69,11 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-//    public String getPicUrl() {
-//        return picUrl;
-//    }
-//
-//    public void setPicUrl(String picUrl) {
-//        this.picUrl = picUrl;
-//    }
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 }

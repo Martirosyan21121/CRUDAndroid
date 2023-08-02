@@ -31,7 +31,7 @@
         android:label="user_update_fragment"
         tools:layout="@layout/user_update_fragment" >
         <action
-            android:id="@+id/action_updateUserFragment2_to_addUserFragment2"
-            app:destination="@id/addUserFragment2" />
+            android:id="@+id/action_updateUserFragment2_to_firstPageFragment2"
+            app:destination="@id/firstPageFragment2" />
     </fragment>
 </navigation>

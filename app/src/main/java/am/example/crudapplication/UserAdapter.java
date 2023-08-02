@@ -1,5 +1,6 @@
 package am.example.crudapplication;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-import java.util.Optional;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
 
@@ -44,6 +44,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         holder.textViewEmail.setText(user.getEmail());
         holder.textViewSurname.setText(user.getSurname());
         holder.textViewPhoneNumber.setText(user.getPhoneNumber());
+        holder.imageView.setImageURI(Uri.parse(user.getImage()));
         holder.delete.setOnClickListener(view -> {
             adapterListener.deleteUser(user.getId(), position);
             Toast.makeText(view.getContext(), "User deleted", Toast.LENGTH_LONG).show();
@@ -72,6 +73,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         TextView textViewSurname;
         TextView textViewPhoneNumber;
 
+        ImageView imageView;
+
         ImageView delete;
         ImageView update;
 
@@ -81,6 +84,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             textViewEmail = view.findViewById(R.id.textUserEmail);
             textViewSurname = view.findViewById(R.id.textUserSurname);
             textViewPhoneNumber = view.findViewById(R.id.textUserPhoneNumber);
+            imageView = view.findViewById(R.id.imageViewToFirstPage);
             delete = view.findViewById(R.id.delete);
             update = view.findViewById(R.id.update);
         }

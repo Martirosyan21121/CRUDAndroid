@@ -2,26 +2,13 @@ package am.example.crudapplication.fragments;
 
 import static android.app.Activity.RESULT_OK;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-
 import android.provider.MediaStore;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,10 +19,15 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.util.Objects;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
-import am.example.crudapplication.MainActivity;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+
 import am.example.crudapplication.R;
 import am.example.crudapplication.User;
 import am.example.crudapplication.UserDAO;
@@ -49,12 +41,13 @@ public class AddUserFragment extends Fragment {
     private EditText email;
     private EditText phoneNumber;
 
+    private static final int SELECT_PICTURE = 1;
 
     private ImageView imageView;
     Button selectImage;
 
+    private String image;
     Button saveUser;
-
     private UserDAO userDAO;
     private UserDatabase userDatabase;
 
@@ -79,11 +72,12 @@ public class AddUserFragment extends Fragment {
 
         imageView = view.findViewById(R.id.imageView);
         selectImage.setOnClickListener(view1 -> {
-
+            openGallery();
         });
 
         saveUser = view.findViewById(R.id.saveUser);
         saveUser.setOnClickListener(view1 -> {
+
             String userName = name.getText().toString().replace(" ", "");
             String userSurname = surname.getText().toString();
             String userEmail = email.getText().toString();
@@ -95,12 +89,13 @@ public class AddUserFragment extends Fragment {
             } else if (userPhoneNumber.isEmpty()) {
                 Toast.makeText(getContext(), "Please input phone number", Toast.LENGTH_LONG).show();
             } else {
-                User user = new User(0, userName, userSurname, userEmail, userPhoneNumber);
+                User user = new User(0, userName, userSurname, userEmail, userPhoneNumber, image);
                 userDAO.saveUser(user);
                 Toast.makeText(getContext(), "User saved", Toast.LENGTH_SHORT).show();
                 Navigation.findNavController(view).navigate(R.id.action_addUserFragment2_to_firstPageFragment2);
             }
         });
+
 
         ImageButton backButton = view.findViewById(R.id.backBtn);
         backButton.setOnClickListener(view1 -> {
@@ -109,4 +104,20 @@ public class AddUserFragment extends Fragment {
         return view;
     }
 
+    private void openGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, SELECT_PICTURE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK && data != null) {
+            Uri selectedImageUri = data.getData();
+            imageView.setImageURI(selectedImageUri);
+        }
+    }
 }
+
+

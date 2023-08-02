@@ -2,21 +2,10 @@ package am.example.crudapplication.fragments;
 
 import static android.app.Activity.RESULT_OK;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-
 import android.provider.MediaStore;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -28,6 +17,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -44,13 +38,12 @@ public class UpdateUserFragment extends Fragment {
     private EditText phoneNumberUpdate;
     private UserDAO userDAO;
     private UserDatabase userDatabase;
-
-    private Bitmap bitmap;
-
-    private Uri imageUri;
-
+    private static final int SELECT_PICTURE = 1;
     private ImageView imageView;
+
+    private String image;
     Button selectImage;
+
     Button updateButton;
 
     public UpdateUserFragment() {
@@ -87,7 +80,10 @@ public class UpdateUserFragment extends Fragment {
 
         userDatabase = UserDatabase.getInstance(getContext());
         userDAO = userDatabase.userDAO();
-
+        imageView = view.findViewById(R.id.imageViewUpdate);
+        selectImage.setOnClickListener(view1 -> {
+            openGallery();
+        });
 
         updateButton = view.findViewById(R.id.updateUser);
         updateButton.setOnClickListener(view1 -> {
@@ -99,10 +95,10 @@ public class UpdateUserFragment extends Fragment {
                 Toast.makeText(getContext(), "Please input email", Toast.LENGTH_LONG).show();
             } else if (!Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
                 Toast.makeText(getContext(), "Please input validate email", Toast.LENGTH_LONG).show();
-            }else if (userPhoneNumber.isEmpty()) {
+            } else if (userPhoneNumber.isEmpty()) {
                 Toast.makeText(getContext(), "Please input phone number", Toast.LENGTH_LONG).show();
             } else {
-                User userUpdate = new User(userId.get(), userName, userSurname, userEmail, userPhoneNumber);
+                User userUpdate = new User(userId.get(), userName, userSurname, userEmail, userPhoneNumber, image);
                 userDAO.updateUser(userUpdate);
                 Navigation.findNavController(view).navigate(R.id.firstPageFragment2);
                 Toast.makeText(getContext(), "User updated", Toast.LENGTH_LONG).show();
@@ -111,9 +107,25 @@ public class UpdateUserFragment extends Fragment {
 
         ImageButton backToAddPage = view.findViewById(R.id.updateBtn);
         backToAddPage.setOnClickListener(view1 -> {
-            Navigation.findNavController(view).navigate(R.id.action_updateUserFragment2_to_addUserFragment2);
+            Navigation.findNavController(view).navigate(R.id.action_updateUserFragment2_to_firstPageFragment2);
         });
 
         return view;
+    }
+
+
+    private void openGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, SELECT_PICTURE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK && data != null) {
+            Uri selectedImageUri = data.getData();
+            imageView.setImageURI(selectedImageUri);
+        }
     }
 }

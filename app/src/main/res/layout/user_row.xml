@@ -7,15 +7,30 @@
     android:layout_margin="5dp"
     app:contentPadding="10dp">
 
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imageViewToFirstPage"
+        android:layout_width="75sp"
+        android:layout_height="75sp"
+        android:layout_marginTop="1sp"
+        android:contentDescription="@string/todo"
+        android:padding="2sp"
+        app:strokeWidth="2sp"
+        app:strokeColor="@color/myColor"
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/circle" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
 
         <LinearLayout
             android:id="@+id/data"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_marginLeft="78dp"
+            android:layout_marginRight="0dp"
             android:layout_toLeftOf="@+id/imageLayout"
             android:orientation="vertical"
             tools:ignore="RtlHardcoded,UselessParent">
@@ -31,20 +46,19 @@
                 android:id="@+id/textUserEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5sp"/>
+                android:layout_marginTop="5sp" />
 
             <TextView
                 android:id="@+id/textUserSurname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5sp"
-               />
+                android:layout_marginTop="5sp" />
 
             <TextView
                 android:id="@+id/textUserPhoneNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5sp"/>
+                android:layout_marginTop="5sp" />
 
         </LinearLayout>
 
