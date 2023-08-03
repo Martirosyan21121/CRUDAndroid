@@ -80,16 +80,18 @@
         android:layout_marginStart="15sp"
         tools:ignore="RtlHardcoded" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageViewUpdate"
-        android:layout_width="90sp"
-        android:layout_height="90sp"
-        android:layout_marginTop="300dp"
+        android:layout_width="95sp"
+        android:layout_height="95sp"
         android:layout_marginStart="250sp"
+        android:layout_marginTop="290sp"
+        android:contentDescription="@string/todo"
+        android:padding="2sp"
+        app:strokeWidth="2sp"
+        app:strokeColor="@color/myColor"
         android:scaleType="centerCrop"
-        app:civ_border_color="@color/myColor"
-        app:civ_border_width="2dp"
-        />
+        app:shapeAppearanceOverlay="@style/circle" />
 
     <Button
         android:id="@+id/updateUser"

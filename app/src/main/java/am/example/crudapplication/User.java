@@ -15,9 +15,6 @@ public class User {
     private String surname;
     private String email;
     private String phoneNumber;
-
-
-
     private String image;
 
     public User(int id, String name, String surname, String email, String phoneNumber, String image) {

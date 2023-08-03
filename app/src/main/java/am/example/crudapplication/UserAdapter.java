@@ -56,6 +56,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             holder.textViewEmail.setText(user.getEmail());
             holder.textViewSurname.setText(user.getSurname());
             holder.textViewPhoneNumber.setText(user.getPhoneNumber());
+            holder.imageView.setImageURI(Uri.parse(user.getImage()));
             adapterListener.updateUser(user);
             Navigation.findNavController(view).navigate(R.id.updateUserFragment2);
         });

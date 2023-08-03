@@ -72,7 +72,8 @@ public class AddUserFragment extends Fragment {
 
         imageView = view.findViewById(R.id.imageView);
         selectImage.setOnClickListener(view1 -> {
-            openGallery();
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(galleryIntent, SELECT_PICTURE);
         });
 
         saveUser = view.findViewById(R.id.saveUser);
@@ -88,6 +89,8 @@ public class AddUserFragment extends Fragment {
                 Toast.makeText(getContext(), "Please input validate email", Toast.LENGTH_LONG).show();
             } else if (userPhoneNumber.isEmpty()) {
                 Toast.makeText(getContext(), "Please input phone number", Toast.LENGTH_LONG).show();
+            } else if (image.isEmpty()) {
+                Toast.makeText(getContext(), "User Select image", Toast.LENGTH_SHORT).show();
             } else {
                 User user = new User(0, userName, userSurname, userEmail, userPhoneNumber, image);
                 userDAO.saveUser(user);
@@ -104,11 +107,6 @@ public class AddUserFragment extends Fragment {
         return view;
     }
 
-    private void openGallery() {
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(galleryIntent, SELECT_PICTURE);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -116,6 +114,7 @@ public class AddUserFragment extends Fragment {
         if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
             imageView.setImageURI(selectedImageUri);
+            image = selectedImageUri.toString();
         }
     }
 }

@@ -70,11 +70,13 @@ public class UpdateUserFragment extends Fragment {
             String email = result.getString("userEmail");
             String surname = result.getString("userSurname");
             String phoneNumber = result.getString("userPhoneNumber");
+            String image = result.getString("userImage");
             userId.set(result.getInt("userId"));
             nameUpdate.setText(name);
             emailUpdate.setText(email);
             surnameUpdate.setText(surname);
             phoneNumberUpdate.setText(phoneNumber);
+            imageView.setImageURI(Uri.parse(image));
         });
 
 
@@ -120,12 +122,13 @@ public class UpdateUserFragment extends Fragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
             imageView.setImageURI(selectedImageUri);
+            image = selectedImageUri.toString();
         }
     }
 }
