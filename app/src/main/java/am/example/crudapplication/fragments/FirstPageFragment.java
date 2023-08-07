@@ -99,7 +99,6 @@ public class FirstPageFragment extends Fragment implements UserAdapterListener {
         bundle.putString("userEmail", user1.getEmail());
         bundle.putString("userSurname", user1.getSurname());
         bundle.putString("userPhoneNumber", user1.getPhoneNumber());
-//        bundle.putString("userImage", Arrays.toString(user1.getImage()));
         getParentFragmentManager().setFragmentResult("userData", bundle);
     }
 }

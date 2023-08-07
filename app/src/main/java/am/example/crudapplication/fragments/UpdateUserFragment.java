@@ -70,13 +70,11 @@ public class UpdateUserFragment extends Fragment {
             String email = result.getString("userEmail");
             String surname = result.getString("userSurname");
             String phoneNumber = result.getString("userPhoneNumber");
-//            byte[] image = result.getByteArray("userImage");
             userId.set(result.getInt("userId"));
             nameUpdate.setText(name);
             emailUpdate.setText(email);
             surnameUpdate.setText(surname);
             phoneNumberUpdate.setText(phoneNumber);
-//            imageView.setImageBitmap(image);
         });
 
 
