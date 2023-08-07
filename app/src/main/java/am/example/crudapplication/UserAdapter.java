@@ -1,5 +1,7 @@
 package am.example.crudapplication;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
@@ -39,12 +42,20 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
+
         User user = userList.get(position);
         holder.textViewName.setText(user.getName());
         holder.textViewEmail.setText(user.getEmail());
         holder.textViewSurname.setText(user.getSurname());
         holder.textViewPhoneNumber.setText(user.getPhoneNumber());
-        holder.imageView.setImageURI(Uri.parse(user.getImage()));
+        if (user.getImage() == null){
+            holder.imageView.isOpaque();
+        }else {
+            byte[] imageData = user.getImage();
+            Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+            holder.imageView.setImageBitmap(bitmap);
+        }
+
         holder.delete.setOnClickListener(view -> {
             adapterListener.deleteUser(user.getId(), position);
             Toast.makeText(view.getContext(), "User deleted", Toast.LENGTH_LONG).show();
@@ -56,7 +67,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             holder.textViewEmail.setText(user.getEmail());
             holder.textViewSurname.setText(user.getSurname());
             holder.textViewPhoneNumber.setText(user.getPhoneNumber());
-            holder.imageView.setImageURI(Uri.parse(user.getImage()));
+            if (user.getImage() == null){
+                holder.imageView.isOpaque();
+            }else {
+                byte[] imageData = user.getImage();
+                Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
+                holder.imageView.setImageBitmap(bitmap);
+            }
             adapterListener.updateUser(user);
             Navigation.findNavController(view).navigate(R.id.updateUserFragment2);
         });

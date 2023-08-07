@@ -41,7 +41,7 @@ public class UpdateUserFragment extends Fragment {
     private static final int SELECT_PICTURE = 1;
     private ImageView imageView;
 
-    private String image;
+    private byte[] image;
     Button selectImage;
 
     Button updateButton;
@@ -70,13 +70,13 @@ public class UpdateUserFragment extends Fragment {
             String email = result.getString("userEmail");
             String surname = result.getString("userSurname");
             String phoneNumber = result.getString("userPhoneNumber");
-            String image = result.getString("userImage");
+//            byte[] image = result.getByteArray("userImage");
             userId.set(result.getInt("userId"));
             nameUpdate.setText(name);
             emailUpdate.setText(email);
             surnameUpdate.setText(surname);
             phoneNumberUpdate.setText(phoneNumber);
-            imageView.setImageURI(Uri.parse(image));
+//            imageView.setImageBitmap(image);
         });
 
 
@@ -84,7 +84,8 @@ public class UpdateUserFragment extends Fragment {
         userDAO = userDatabase.userDAO();
         imageView = view.findViewById(R.id.imageViewUpdate);
         selectImage.setOnClickListener(view1 -> {
-            openGallery();
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(galleryIntent, SELECT_PICTURE);
         });
 
         updateButton = view.findViewById(R.id.updateUser);
@@ -99,6 +100,11 @@ public class UpdateUserFragment extends Fragment {
                 Toast.makeText(getContext(), "Please input validate email", Toast.LENGTH_LONG).show();
             } else if (userPhoneNumber.isEmpty()) {
                 Toast.makeText(getContext(), "Please input phone number", Toast.LENGTH_LONG).show();
+            } else if (image == null) {
+                User user = new User(userId.get(), userName, userSurname, userEmail, userPhoneNumber, null);
+                userDAO.updateUser(user);
+                Toast.makeText(getContext(), "User updated", Toast.LENGTH_SHORT).show();
+                Navigation.findNavController(view).navigate(R.id.firstPageFragment2);
             } else {
                 User userUpdate = new User(userId.get(), userName, userSurname, userEmail, userPhoneNumber, image);
                 userDAO.updateUser(userUpdate);
@@ -115,20 +121,24 @@ public class UpdateUserFragment extends Fragment {
         return view;
     }
 
-
-    private void openGallery() {
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(galleryIntent, SELECT_PICTURE);
-    }
-
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
             imageView.setImageURI(selectedImageUri);
-            image = selectedImageUri.toString();
+            try {
+                Bitmap originalBitmap = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), selectedImageUri);
+                Bitmap copyBitmap = originalBitmap.copy(originalBitmap.getConfig(), true);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                copyBitmap.compress(Bitmap.CompressFormat.JPEG, 60, stream);
+                image = stream.toByteArray();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            image = null;
         }
     }
 }

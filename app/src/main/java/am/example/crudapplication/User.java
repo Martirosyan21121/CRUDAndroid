@@ -1,7 +1,5 @@
 package am.example.crudapplication;
 
-import android.net.Uri;
-
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -15,9 +13,9 @@ public class User {
     private String surname;
     private String email;
     private String phoneNumber;
-    private String image;
+    private byte[] image;
 
-    public User(int id, String name, String surname, String email, String phoneNumber, String image) {
+    public User(int id, String name, String surname, String email, String phoneNumber, byte[] image) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -66,11 +64,11 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 }
