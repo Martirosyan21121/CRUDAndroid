@@ -67,40 +67,43 @@
         android:hint="@string/phone_number"
         android:inputType="phone"
         android:textSize="20sp"
+        android:maxLength="10"
         tools:ignore="Autofill" />
 
-    <Button
+
+    <ImageButton
         android:id="@+id/btnSelectImage"
         android:layout_width="150sp"
-        android:layout_height="50sp"
-        android:layout_marginStart="15sp"
+        android:layout_height="150sp"
+        android:layout_gravity="center_horizontal"
+        android:background="@null"
         android:layout_marginTop="300sp"
-        android:backgroundTint="@color/myColor"
+        android:backgroundTint="@color/white"
+        android:contentDescription="@string/todo"
+        android:src="@drawable/baseline_account_circle_24"
         android:text="@string/select_image"
         android:textSize="15sp"
         tools:ignore="RtlHardcoded" />
 
-
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageView"
-        android:layout_width="95sp"
-        android:layout_height="95sp"
-        android:layout_marginStart="250sp"
-        android:layout_marginTop="290sp"
+        android:layout_width="150sp"
+        android:layout_height="150sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="300sp"
         android:contentDescription="@string/todo"
         android:padding="2sp"
-        app:strokeWidth="2sp"
-        app:strokeColor="@color/myColor"
         android:scaleType="centerCrop"
-        app:shapeAppearanceOverlay="@style/circle" />
-
+        app:shapeAppearanceOverlay="@style/circle"
+        app:strokeColor="@color/myColor"
+        app:strokeWidth="2sp" />
 
     <Button
         android:id="@+id/saveUser"
         android:layout_width="180dp"
         android:layout_height="60dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="380sp"
+        android:layout_marginTop="460sp"
         android:backgroundTint="@color/myColor"
         android:text="@string/save_user"
         android:textSize="20sp"

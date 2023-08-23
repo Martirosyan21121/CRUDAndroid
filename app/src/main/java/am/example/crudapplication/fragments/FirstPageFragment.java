@@ -1,40 +1,43 @@
 package am.example.crudapplication.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import am.example.crudapplication.R;
+import am.example.crudapplication.RestApi;
+import am.example.crudapplication.RestApiService;
 import am.example.crudapplication.User;
 import am.example.crudapplication.UserAdapter;
 import am.example.crudapplication.UserAdapterListener;
 import am.example.crudapplication.UserDAO;
 import am.example.crudapplication.UserDatabase;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FirstPageFragment extends Fragment implements UserAdapterListener {
 
-    private UserDatabase userDatabase;
-
+    private RestApi restApi;
     private List<User> userList;
-    private RecyclerView recyclerView;
     private UserAdapter userAdapter;
-
-    Button searchButton;
     private UserDAO userDAO;
+
+    private SearchView searchView;
 
     public FirstPageFragment() {
 
@@ -49,38 +52,51 @@ public class FirstPageFragment extends Fragment implements UserAdapterListener {
         Button add = view.findViewById(R.id.addButton);
         add.setOnClickListener(view1 -> Navigation.findNavController(view1).navigate(R.id.action_firstPageFragment2_to_addUserFragment2));
 
-        recyclerView = view.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        userDatabase = UserDatabase.getInstance(requireContext());
+        UserDatabase userDatabase = UserDatabase.getInstance(requireContext());
         userDAO = userDatabase.userDAO();
         userList = userDAO.findAll();
 
         userAdapter = new UserAdapter(userList, this);
         recyclerView.setAdapter(userAdapter);
 
+        searchView = view.findViewById(R.id.search);
+        setupSearchView();
 
-        searchButton = view.findViewById(R.id.searchButton);
-        searchButton.setOnClickListener(view12 -> {
-            EditText search = view.findViewById(R.id.search);
-            String searchName = search.getText().toString();
-            if (searchName.isEmpty()) {
-                Toast.makeText(getContext(), "Please input name", Toast.LENGTH_LONG).show();
-            } else if (userDAO.findAllByName(searchName).isEmpty()) {
-                Toast.makeText(getContext(), "Name dose not exist", Toast.LENGTH_LONG).show();
-            } else {
-                userList = userDAO.findAllByName(searchName);
-                userAdapter = new UserAdapter(userList, this);
-                recyclerView.setAdapter(userAdapter);
-                Toast.makeText(getContext(), "Search successfully done", Toast.LENGTH_LONG).show();
+        restApi = RestApiService.getRestApi();
+        fetchUsers();
+
+        return view;
+    }
+
+    private void setupSearchView() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                filterData(s);
+                return true;
             }
         });
+    }
 
-        ImageButton homeButton = view.findViewById(R.id.homeButton);
-        homeButton.setOnClickListener(view1 -> {
-            Navigation.findNavController(view).navigate(R.id.firstPageFragment2);
-        });
-        return view;
+    private void filterData(String query) {
+        List<User> filteredList = new ArrayList<>();
+        for (User u : userList) {
+            if (u.getName().toLowerCase().contains(query.toLowerCase())) {
+                if (u.getImage() == null) {
+                    u.setImage("res/drawable/baseline_account_circle_24.xml".getBytes());
+                }
+                filteredList.add(u);
+            }
+        }
+        userAdapter.setFilteredList(filteredList);
     }
 
     @Override
@@ -92,13 +108,41 @@ public class FirstPageFragment extends Fragment implements UserAdapterListener {
     @Override
     public void updateUser(User user) {
         Optional<User> optionalUser = userDAO.findUserById(user.getId());
-        User user1 = optionalUser.get();
-        Bundle bundle = new Bundle();
-        bundle.putInt("userId", user1.getId());
-        bundle.putString("userName", user1.getName());
-        bundle.putString("userEmail", user1.getEmail());
-        bundle.putString("userSurname", user1.getSurname());
-        bundle.putString("userPhoneNumber", user1.getPhoneNumber());
-        getParentFragmentManager().setFragmentResult("userData", bundle);
+        if (optionalUser.isPresent()) {
+            User user1 = optionalUser.get();
+            Bundle bundle = new Bundle();
+            bundle.putInt("userId", user1.getId());
+            bundle.putString("userName", user1.getName());
+            bundle.putString("userEmail", user1.getEmail());
+            bundle.putString("userSurname", user1.getSurname());
+            bundle.putString("userPhoneNumber", user1.getPhoneNumber());
+            getParentFragmentManager().setFragmentResult("userData", bundle);
+        }
+    }
+
+    private void fetchUsers() {
+        Call<List<User>> call = restApi.getContacts();
+        call.enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<User>> call, @NonNull Response<List<User>> response) {
+                if (response.isSuccessful()){
+                    List<User> users = response.body();
+                    assert users != null;
+                    storeUsersInRoom(users);
+                } else {
+                    Log.e("Api", "error");
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<List<User>> call, @NonNull Throwable t) {
+
+            }
+        });
+    }
+
+    private void storeUsersInRoom(List<User> users) {
+        for (User user : users) {
+            userDAO.insertUser(user);
+        }
     }
 }

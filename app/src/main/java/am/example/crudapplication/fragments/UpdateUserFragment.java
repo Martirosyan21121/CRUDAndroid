@@ -42,7 +42,7 @@ public class UpdateUserFragment extends Fragment {
     private ImageView imageView;
 
     private byte[] image;
-    Button selectImage;
+    ImageButton selectImage;
 
     Button updateButton;
 
@@ -98,6 +98,8 @@ public class UpdateUserFragment extends Fragment {
                 Toast.makeText(getContext(), "Please input validate email", Toast.LENGTH_LONG).show();
             } else if (userPhoneNumber.isEmpty()) {
                 Toast.makeText(getContext(), "Please input phone number", Toast.LENGTH_LONG).show();
+            }else if (userPhoneNumber.length() < 6){
+                Toast.makeText(getContext(), "Phone number need to have minimum 6 characters", Toast.LENGTH_SHORT).show();
             } else if (image == null) {
                 User user = new User(userId.get(), userName, userSurname, userEmail, userPhoneNumber, null);
                 userDAO.updateUser(user);
@@ -130,7 +132,7 @@ public class UpdateUserFragment extends Fragment {
                 Bitmap originalBitmap = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), selectedImageUri);
                 Bitmap copyBitmap = originalBitmap.copy(originalBitmap.getConfig(), true);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                copyBitmap.compress(Bitmap.CompressFormat.JPEG, 60, stream);
+                copyBitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
                 image = stream.toByteArray();
             } catch (IOException e) {
                 throw new RuntimeException(e);

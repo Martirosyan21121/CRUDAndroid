@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -20,21 +19,18 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 
 import am.example.crudapplication.R;
 import am.example.crudapplication.User;
 import am.example.crudapplication.UserDAO;
 import am.example.crudapplication.UserDatabase;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 public class AddUserFragment extends Fragment {
@@ -46,8 +42,8 @@ public class AddUserFragment extends Fragment {
 
     private static final int SELECT_PICTURE = 1;
     private ImageView imageView;
-    Button selectImage;
     private byte[] image;
+    ImageButton selectImage;
     Button saveUser;
     private UserDAO userDAO;
     private UserDatabase userDatabase;
@@ -90,6 +86,8 @@ public class AddUserFragment extends Fragment {
                 Toast.makeText(getContext(), "Please input validate email", Toast.LENGTH_LONG).show();
             } else if (userPhoneNumber.isEmpty()) {
                 Toast.makeText(getContext(), "Please input phone number", Toast.LENGTH_LONG).show();
+            } else if (userPhoneNumber.length() < 6) {
+                Toast.makeText(getContext(), "Phone number need to have minimum 6 characters", Toast.LENGTH_SHORT).show();
             } else if (image == null) {
                 User user = new User(0, userName, userSurname, userEmail, userPhoneNumber, null);
                 userDAO.saveUser(user);
@@ -103,11 +101,11 @@ public class AddUserFragment extends Fragment {
             }
         });
 
-
         ImageButton backButton = view.findViewById(R.id.backBtn);
         backButton.setOnClickListener(view1 -> {
             Navigation.findNavController(view).navigate(R.id.action_addUserFragment2_to_firstPageFragment2);
         });
+
         return view;
     }
 
@@ -123,7 +121,7 @@ public class AddUserFragment extends Fragment {
                 Bitmap originalBitmap = MediaStore.Images.Media.getBitmap(requireContext().getContentResolver(), selectedImageUri);
                 Bitmap copyBitmap = originalBitmap.copy(originalBitmap.getConfig(), true);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                copyBitmap.compress(Bitmap.CompressFormat.JPEG, 60, stream);
+                copyBitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
                 image = stream.toByteArray();
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -132,6 +130,9 @@ public class AddUserFragment extends Fragment {
             image = null;
         }
     }
+
+
+
 }
 
 

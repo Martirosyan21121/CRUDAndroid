@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,11 +20,15 @@ import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
 
+
     private List<User> userList;
 
     private UserAdapterListener adapterListener;
 
-
+    public void setFilteredList(List<User> filteredList){
+        this.userList = filteredList;
+        notifyDataSetChanged();
+    }
     public void deleteUserPosition(int position) {
         userList.remove(position);
     }
@@ -48,9 +53,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         holder.textViewEmail.setText(user.getEmail());
         holder.textViewSurname.setText(user.getSurname());
         holder.textViewPhoneNumber.setText(user.getPhoneNumber());
-        if (user.getImage() == null){
+        if (user.getImage() == null) {
             holder.imageView.isOpaque();
-        }else {
+        } else {
             byte[] imageData = user.getImage();
             Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
             holder.imageView.setImageBitmap(bitmap);
@@ -67,9 +72,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             holder.textViewEmail.setText(user.getEmail());
             holder.textViewSurname.setText(user.getSurname());
             holder.textViewPhoneNumber.setText(user.getPhoneNumber());
-            if (user.getImage() == null){
+            if (user.getImage() == null) {
                 holder.imageView.isOpaque();
-            }else {
+            } else {
                 byte[] imageData = user.getImage();
                 Bitmap bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
                 holder.imageView.setImageBitmap(bitmap);
