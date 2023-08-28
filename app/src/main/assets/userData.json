@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Stephen",
+    "surname": "Curry",
+    "email": "Curry30@gmail.com",
+    "phoneNumber": 232556303030
+  },
+  {
+    "name": "Lebron",
+    "surname": "James",
+    "email": "James23@gmail.com",
+    "phoneNumber": 232556232323
+  },
+  {
+    "name": "James",
+    "surname": "Harden",
+    "email": "Harden13@gmail.com",
+    "phoneNumber": 232556131313
+  }
+]
