@@ -1,13 +1,11 @@
 package am.example.crudapplication.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -20,19 +18,14 @@ import java.util.Optional;
 
 import am.example.crudapplication.R;
 import am.example.crudapplication.RestApi;
-import am.example.crudapplication.RestApiService;
 import am.example.crudapplication.User;
 import am.example.crudapplication.UserAdapter;
 import am.example.crudapplication.UserAdapterListener;
 import am.example.crudapplication.UserDAO;
 import am.example.crudapplication.UserDatabase;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class FirstPageFragment extends Fragment implements UserAdapterListener {
 
-    private RestApi restApi;
     private List<User> userList;
     private UserAdapter userAdapter;
     private UserDAO userDAO;
@@ -58,16 +51,14 @@ public class FirstPageFragment extends Fragment implements UserAdapterListener {
         UserDatabase userDatabase = UserDatabase.getInstance(requireContext());
         userDAO = userDatabase.userDAO();
         userList = userDAO.findAll();
-
         userAdapter = new UserAdapter(userList, this);
         recyclerView.setAdapter(userAdapter);
 
         searchView = view.findViewById(R.id.search);
         setupSearchView();
 
-        restApi = RestApiService.getRestApi();
-        fetchUsers();
-
+        RestApi restApi = new RestApi();
+        restApi.loadContacts();
         return view;
     }
 
@@ -120,29 +111,4 @@ public class FirstPageFragment extends Fragment implements UserAdapterListener {
         }
     }
 
-    private void fetchUsers() {
-        Call<List<User>> call = restApi.getContacts();
-        call.enqueue(new Callback<List<User>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<User>> call, @NonNull Response<List<User>> response) {
-                if (response.isSuccessful()){
-                    List<User> users = response.body();
-                    assert users != null;
-                    storeUsersInRoom(users);
-                } else {
-                    Log.e("Api", "error");
-                }
-            }
-            @Override
-            public void onFailure(@NonNull Call<List<User>> call, @NonNull Throwable t) {
-
-            }
-        });
-    }
-
-    private void storeUsersInRoom(List<User> users) {
-        for (User user : users) {
-            userDAO.insertUser(user);
-        }
-    }
 }
